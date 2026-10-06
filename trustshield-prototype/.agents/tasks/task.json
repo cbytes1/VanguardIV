@@ -1,0 +1,16 @@
+{
+  "task_id": "task-trustshield-six-screens",
+  "task_description": "Upgrade the scaffolded Next.js/TypeScript/Tailwind 'TrustShield' demo app into the full six-screen interactive prototype described in the product spec: Johnson Family (Denver, CO) household with 12 devices, a month of threat history, Trust Score 87, and the privacy 'foggy glass' model. All data is mock/simulated; no real backend. Built for the Vanguard IV high-school innovation challenge team as a reference prototype.",
+  "status": "completed",
+  "feature_order": [
+    "FEAT-001",
+    "FEAT-002",
+    "FEAT-003",
+    "FEAT-004",
+    "FEAT-005",
+    "FEAT-006",
+    "FEAT-007",
+    "FEAT-008"
+  ],
+  "blocked_reason": null
+}

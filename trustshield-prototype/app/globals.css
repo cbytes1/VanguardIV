@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background-color: #0f172a; /* navy */
+  color: #ffffff;
+}
+
+body {
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Content fade used by the page-transition wrapper in AppShell. Keyed to the
+   route so navigating between screens replays the entrance animation. */
+.page-transition {
+  animation: fade-in 0.4s ease-out both;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Respect users who prefer reduced motion: disable the custom animations. */
+@media (prefers-reduced-motion: reduce) {
+  .page-transition,
+  .animate-fade-in,
+  .animate-pulse-slow,
+  .animate-ping-soft {
+    animation: none !important;
+  }
+}

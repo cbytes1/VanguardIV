@@ -1,0 +1,27 @@
+{
+  "id": "FEAT-005",
+  "type": "feat",
+  "description": "Screen 4 - Family Protection. Rebuild app/family-protection into family-focused controls and monitoring: four member cards with avatars/roles, per-member drill-in (protection settings with toggles, member-specific alerts, associated devices), a Family Trust Digest weekly-email preview, and Alert Preferences. Depends on FEAT-001 (familyMembers with settings/alerts/devices).",
+  "status": "completed",
+  "steps": [
+    "Read context.json and FEAT-001's findings first. Rebuild app/family-protection/page.tsx as the server wrapper (metadata + <AppShell>) and move interactivity into a new app/family-protection/FamilyProtectionClient.tsx ('use client').",
+    "Render four Family Member cards with avatars (initials), names, and role labels: 'Dad (Account Owner)' full access all features enabled; 'Mom' full access all features enabled; 'Alex (Teen, 16)' SafeSearch on, social media monitoring, screen time visible; 'Emma (Child, 10)' full parental controls, content filtering, app restrictions.",
+    "Add per-member drill-in: clicking a member reveals their protection settings as toggle controls (reuse the Toggle pattern from PrivacyCenterClient.tsx), their recent alerts specific to them, and the devices associated with them. Toggles update local state.",
+    "Add a 'Family Trust Digest' section previewing the weekly email report: threats blocked per member, new risks identified, recommended actions, and trust-score changes.",
+    "Add an 'Alert Preferences' section to configure how each member is notified (push, email, in-app) and at what severity level, using toggles/selects bound to local state.",
+    "Run 'npm run build' and fix any errors."
+  ],
+  "acceptance_criteria": [
+    "'npm run build' exits 0.",
+    "Four member cards show Dad (Account Owner), Mom, Alex (Teen, 16), and Emma (Child, 10) with avatars and role labels.",
+    "Clicking a member reveals their settings toggles, member-specific alerts, and associated devices.",
+    "A Family Trust Digest preview shows per-member threats blocked, new risks, recommended actions, and score changes.",
+    "An Alert Preferences section lets each member be configured for push/email/in-app and a severity level."
+  ],
+  "verification": [
+    "Run 'npm run build'; confirm exit 0 with no errors.",
+    "Run 'npm run dev', open http://localhost:3000/family-protection, click a member to open the drill-in and flip a setting toggle, and confirm the digest and alert preferences render with no console errors."
+  ],
+  "blocked_reason": null,
+  "findings": "DONE. Split the route into app/family-protection/page.tsx (server wrapper: metadata + <AppShell><FamilyProtectionClient/></AppShell>) and a new app/family-protection/FamilyProtectionClient.tsx ('use client'). Reused the exact Toggle switch pattern from PrivacyCenterClient.tsx (button role=switch, bg-emerald when on). \n\nUI: three summary stat cards (members/devices/active threats) kept from the old screen. Four clickable member cards (avatar initials bubble, name, roleLabel, SeverityBadge, trust-score ProgressBar, devices/threats, last-active). Clicking a card sets selectedId and swaps the grid for a MemberDetail drill-in: member header, Protection settings (toggle per configured settings key, local state only), Recent alerts (member.memberAlerts with SeverityBadge, else all-clear), Associated devices (member.memberDevices). A 'Back to family' button returns to the grid. Below the grid/detail are two always-visible sections: Family Trust Digest (weekly-email preview table: per-member threats blocked / new risks / recommended action / score change with up/down/flat icon) and Alert Preferences (per-member push/email/in-app Toggles + a minimum-severity <select>, all bound to local state).\n\nLocal state lives in one Record<memberId, {settings, notifyChannels, notifySeverity}> seeded from data/mock familyMembers; toggles/select mutate copies, never the source data. DIGEST_ROWS are static demo figures defined in the client file.\n\nDATA CHANGE in data/mock.ts: Dad (fam-dad) and Mom (fam-mom) previously had settings:{} which left their drill-in with no toggles. Per FEAT-005 step 2 ('full access all features enabled'), both now have all five settings (safeSearch/socialMonitoring/screenTimeVisible/contentFiltering/appRestrictions) set true so their drill-in shows meaningful toggles. Alex/Emma settings unchanged.\n\nTAILWIND GOTCHA: avatarColor is a palette token string (teal/emerald/amber/cyan). Dynamic `bg-${color}/25` classes get purged by the JIT, so I added a static AVATAR_BG map + avatarBg() helper returning full literal classes (bg-teal/25 etc.) so Tailwind generates them. Any later screen rendering member avatars by token should do the same.\n\nVERIFICATION: 'npm run build' exits 0 (all 10 routes compile, no TS/ESLint errors). 'npm run dev' probe: GET /family-protection -> 200, clean compile, no console warnings; rendered HTML contains 'Family Trust Digest', 'Alert Preferences', 'Account Owner', and 'Child, 10'. Build commands must be prefixed with $env:Path = \"$env:ProgramFiles\\nodejs;$env:Path\" (Node not on PATH, per FEAT-001). Dev server must be launched via Start-Process cmd.exe /c (npm is a .cmd shim) and probed, not run inline, because the harness blocks long-running dev commands."
+}

@@ -1,0 +1,23 @@
+{
+  "id": "FEAT-008",
+  "type": "docs",
+  "description": "Landing page polish and README. Align the landing page (app/page.tsx) with the Johnson Family demo framing and rewrite README.md so the Vanguard IV team can run, understand, and extend the prototype, with the project tied to the innovation-challenge judging criteria. Depends on FEAT-001 through FEAT-007 being in place so docs describe what actually exists.",
+  "steps": [
+    "Read context.json first. Review app/page.tsx and lightly update copy so it frames the demo as the Johnson Family household example for the Vanguard IV team (keep the feature grid links to all six screens; keep it a clean hero).",
+    "Rewrite README.md: a short overview of the TrustShield concept (AI-powered scam/fraud/digital-trust guardian for families delivered through a broadband provider); how to run it ('npm install && npm run dev', opens on http://localhost:3000); a tour of the six screens and what each demonstrates; how the project is organized (app/ routes, components/, data/mock.ts, lib/types.ts + lib/utils.ts); an explicit note that all data is mock/simulated with no real AI/backend; and a short section mapping the prototype to the judging criteria (innovation, feasibility, privacy, family value) highlighting why the Privacy Center 'foggy glass' model matters most. Keep the tone approachable for a high-school team and note that the code is commented so they can modify it.",
+    "Run 'npm run build' to confirm nothing broke, and sanity-check that the README's listed routes and structure match the actual files."
+  ],
+  "status": "completed",
+  "acceptance_criteria": [
+    "'npm run build' exits 0.",
+    "README.md documents how to run the app, the six screens, the project structure, that data is mock/simulated, and the mapping to the judging criteria.",
+    "The landing page frames the demo for Vanguard IV and links to all six screens.",
+    "README route/structure descriptions match the files that actually exist."
+  ],
+  "verification": [
+    "Run 'npm run build'; confirm exit 0 with no errors.",
+    "Run 'npm run dev', open http://localhost:3000, confirm the landing page links into all six screens, and read README.md to confirm the run steps and structure are accurate."
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

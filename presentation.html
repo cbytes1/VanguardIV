@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vanguard IV — TrustShield</title>
+<style>
+  :root{
+    --bg:#0a1a2f; --bg-2:#102a43; --bg-3:#0d2236;
+    --teal:#2dd4bf; --cyan:#38bdf8; --white:#f8fafc; --muted:#94a3b8;
+    --warn:#f59e0b; --danger:#ef4444; --success:#34d399;
+    --border:1px solid rgba(45,212,191,.25);
+    --card-shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(45,212,191,.10), transparent 60%),
+      radial-gradient(1000px 600px at -10% 110%, rgba(56,189,248,.10), transparent 55%),
+      var(--bg);
+    color:var(--white);
+    overflow:hidden;
+  }
+
+  /* ---- deck + slides ---- */
+  #deck{position:fixed;inset:0}
+  .slide{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:clamp(28px,5vw,80px) clamp(32px,7vw,120px);
+    opacity:0;visibility:hidden;transform:translateX(40px);
+    transition:opacity .38s ease, transform .38s ease;
+    pointer-events:none;
+  }
+  .slide--active{opacity:1;visibility:visible;transform:translateX(0);pointer-events:auto;z-index:2}
+  .slide--prev{transform:translateX(-40px)}
+
+  @media (prefers-reduced-motion: reduce){
+    .slide{transition:opacity .2s linear;transform:none!important}
+  }
+
+  /* ---- typography / structure ---- */
+  .slide__kicker{
+    color:var(--teal);font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    font-size:clamp(11px,1.1vw,14px);margin-bottom:14px;
+  }
+  .slide__title{
+    font-size:clamp(26px,4.4vw,56px);line-height:1.08;font-weight:800;
+    letter-spacing:-.01em;margin-bottom:10px;
+  }
+  .slide__sub{color:var(--muted);font-size:clamp(14px,1.6vw,21px);max-width:60ch;margin-bottom:22px}
+  .slide__body{width:100%}
+  .accent{color:var(--teal)}
+  .accent2{color:var(--cyan)}
+  .muted{color:var(--muted)}
+  .center{text-align:center;align-items:center}
+  .lead{font-size:clamp(16px,1.9vw,24px);line-height:1.5;max-width:68ch}
+
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .grid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+
+  .card{
+    background:linear-gradient(180deg, var(--bg-2), var(--bg-3));
+    border:var(--border);border-radius:16px;padding:clamp(14px,1.6vw,22px);
+    box-shadow:var(--card-shadow);
+  }
+  .card h3{font-size:clamp(15px,1.5vw,20px);margin-bottom:6px}
+  .card p{color:var(--muted);font-size:clamp(12px,1.15vw,15px);line-height:1.45}
+  .card .num{font-size:clamp(12px,1vw,13px);color:var(--teal);font-weight:700}
+
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;
+    background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.4);
+    color:var(--teal);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;
+  }
+  .badge{background:rgba(56,189,248,.14);border:1px solid rgba(56,189,248,.4);color:var(--cyan)}
+
+  ul.ticks{list-style:none;display:flex;flex-direction:column;gap:10px}
+  ul.ticks li{display:flex;gap:10px;align-items:flex-start;font-size:clamp(14px,1.5vw,19px);line-height:1.4}
+  ul.ticks li svg{flex:0 0 auto;margin-top:3px}
+
+  .icon{width:1em;height:1em;vertical-align:-.125em}
+  .ico-lg{width:clamp(30px,3.4vw,46px);height:clamp(30px,3.4vw,46px)}
+
+  /* ---- chrome ---- */
+  #progress{position:fixed;top:0;left:0;height:4px;width:0;z-index:20;
+    background:linear-gradient(90deg,var(--teal),var(--cyan));transition:width .35s ease}
+  footer{
+    position:fixed;left:0;right:0;bottom:0;height:46px;z-index:15;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 clamp(16px,3vw,42px);font-size:13px;color:var(--muted);
+    background:linear-gradient(180deg, transparent, rgba(10,26,47,.75));
+  }
+  footer .brand{color:var(--white);font-weight:800;letter-spacing:.02em}
+  footer .brand span{color:var(--teal)}
+  #counter{font-variant-numeric:tabular-nums}
+
+  .navbtn{
+    position:fixed;top:50%;transform:translateY(-50%);z-index:16;
+    width:44px;height:44px;border-radius:50%;cursor:pointer;
+    background:rgba(16,42,67,.8);border:var(--border);color:var(--white);
+    display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s;
+  }
+  .navbtn:hover{background:rgba(45,212,191,.25)}
+  #prevBtn{left:14px}#nextBtn{right:14px}
+
+  #dots{position:fixed;bottom:52px;left:50%;transform:translateX(-50%);z-index:16;
+    display:flex;gap:7px;max-width:80vw;flex-wrap:wrap;justify-content:center}
+  #dots button{width:9px;height:9px;border-radius:50%;border:none;cursor:pointer;padding:0;
+    background:rgba(148,163,184,.4);transition:background .2s,transform .2s}
+  #dots button.active{background:var(--teal);transform:scale(1.35)}
+
+  .notes{display:none;margin-top:18px;border-left:3px solid var(--warn);
+    background:rgba(245,158,11,.08);padding:12px 16px;border-radius:0 10px 10px 0;
+    color:#fde9c7;font-size:14px;line-height:1.45;max-width:80ch}
+  .notes b{color:var(--warn)}
+  body.show-notes .notes{display:block}
+
+  /* ---- bespoke visual helpers ---- */
+  .stat-huge{font-size:clamp(70px,13vw,170px);font-weight:900;line-height:.9;
+    background:linear-gradient(180deg,var(--teal),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat-tile{text-align:center}
+  .stat-tile .v{font-size:clamp(22px,3vw,40px);font-weight:900;color:var(--teal)}
+  .stat-tile .l{color:var(--muted);font-size:clamp(11px,1.1vw,14px);margin-top:4px;line-height:1.3}
+
+  .node{background:var(--bg-2);border:var(--border);border-radius:14px;padding:14px 16px;
+    text-align:center;box-shadow:var(--card-shadow)}
+  .node .t{font-weight:700;font-size:clamp(13px,1.4vw,18px)}
+  .node .d{color:var(--muted);font-size:clamp(11px,1.05vw,13px);margin-top:4px}
+  .flow{display:flex;align-items:center;gap:10px;flex-wrap:nowrap}
+  .flow .arrow{color:var(--teal);flex:0 0 auto}
+
+  .mock{background:#071321;border:var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--card-shadow)}
+  .mock .bar{height:26px;background:#0f2740;display:flex;align-items:center;gap:5px;padding:0 10px}
+  .mock .bar i{width:8px;height:8px;border-radius:50%;background:#2a4a68;display:inline-block}
+  .mock .scr{padding:12px 13px;font-size:12px}
+  .mock .scr h4{font-size:13px;margin-bottom:8px;color:var(--white)}
+  .mock .row{display:flex;justify-content:space-between;align-items:center;padding:7px 9px;border-radius:9px;
+    background:#0d2033;margin-bottom:7px;color:var(--muted);font-size:11.5px}
+  .mock .row.ok{border-left:3px solid var(--success)}
+  .mock .row.warn{border-left:3px solid var(--warn)}
+  .mock .row.bad{border-left:3px solid var(--danger)}
+  .toggle{width:30px;height:16px;border-radius:999px;background:var(--teal);position:relative;flex:0 0 auto}
+  .toggle.off{background:#2a4a68}
+  .toggle::after{content:"";position:absolute;top:2px;right:2px;width:12px;height:12px;border-radius:50%;background:#fff}
+  .toggle.off::after{left:2px;right:auto}
+
+  table.matrix{width:100%;border-collapse:collapse;font-size:clamp(12px,1.3vw,16px)}
+  table.matrix th,table.matrix td{border:1px solid rgba(148,163,184,.22);padding:12px 10px;text-align:center}
+  table.matrix th:first-child,table.matrix td:first-child{text-align:left;color:var(--muted)}
+  table.matrix thead th{background:var(--bg-2);font-weight:700}
+  table.matrix .own{background:rgba(45,212,191,.1);color:var(--teal);font-weight:800}
+  .yes{color:var(--success);font-weight:800}
+  .no{color:var(--danger);font-weight:800}
+  .partial{color:var(--warn);font-weight:800}
+
+  .timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;position:relative}
+  .phase{position:relative}
+  .phase .tag{font-weight:800;color:var(--teal);font-size:clamp(13px,1.4vw,18px)}
+  .phase .when{color:var(--cyan);font-size:13px;font-weight:600;margin:2px 0 8px}
+
+  .journey{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:8px}
+
+  .bars{display:flex;align-items:flex-end;gap:28px;height:230px;padding:14px 10px;
+    border-left:2px solid rgba(148,163,184,.3);border-bottom:2px solid rgba(148,163,184,.3)}
+  .barcol{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;flex:1;height:100%}
+  .barcol .pair{display:flex;align-items:flex-end;gap:6px;height:200px;position:relative}
+  .barcol .b{width:34px;border-radius:6px 6px 0 0;min-height:8px}
+  .barcol .cost{background:linear-gradient(180deg,#f59e0b,#b45309)}
+  .barcol .rev{background:linear-gradient(180deg,var(--teal),#0d9488)}
+  .barcol .yr{color:var(--muted);font-size:12px}
+
+  .list-split{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .list-split h3{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:clamp(15px,1.6vw,21px)}
+
+  .principle{display:flex;gap:12px;align-items:flex-start}
+  .principle .ring{flex:0 0 auto;width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.4);color:var(--teal)}
+
+  .criteria-row{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+  .criteria-row .label{flex:0 0 46%;font-size:clamp(14px,1.5vw,19px)}
+  .criteria-row .track{flex:1;height:16px;border-radius:999px;background:#0d2033;overflow:hidden}
+  .criteria-row .fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--cyan))}
+  .criteria-row .w{flex:0 0 48px;text-align:right;font-weight:800;color:var(--teal)}
+
+  .foot-note{color:var(--muted);font-size:12px;margin-top:14px}
+  .wordmark{display:inline-flex;align-items:center;gap:14px}
+  .wordmark .wm-text{font-size:clamp(34px,6vw,78px);font-weight:900;letter-spacing:-.02em}
+  .wordmark .wm-text b{background:linear-gradient(180deg,var(--teal),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  @media (max-width:860px){
+    .grid-3,.grid-4,.grid-5,.list-split,.timeline{grid-template-columns:1fr 1fr}
+    .journey{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<main id="deck">
+
+  <!-- ============ SLIDE 1 — TITLE ============ -->
+  <section class="slide center">
+    <div class="slide__body center" style="display:flex;flex-direction:column;align-items:center;gap:8px">
+      <div class="wordmark">
+        <svg class="ico-lg" style="width:clamp(46px,7vw,92px);height:clamp(46px,7vw,92px)" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.6">
+          <path d="M12 2 4 5v6c0 5 3.4 8.6 8 11 4.6-2.4 8-6 8-11V5l-8-3Z" fill="rgba(45,212,191,.12)"/>
+          <path d="m8.5 12 2.5 2.5L16 9" stroke="var(--cyan)" stroke-width="1.8"/>
+        </svg>
+        <span class="wm-text">Trust<b>Shield</b></span>
+      </div>
+      <p class="slide__sub center" style="margin:14px 0 4px">An AI-powered scam, fraud &amp; digital-trust guardian for families.</p>
+      <p class="lead center accent2" style="font-weight:700">Bridging the Trust Deficit</p>
+      <p class="muted" style="margin-top:18px">2026 SCTE-RMC High School Innovation Challenge</p>
+      <div style="margin-top:26px" class="pill">Team <b style="margin-left:4px">Vanguard IV</b></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 2 — AGENDA ============ -->
+  <section class="slide">
+    <div class="slide__kicker">The Plan</div>
+    <h2 class="slide__title">What we'll cover</h2>
+    <p class="slide__sub">Ten deliverables, one connected story — from the problem to a working prototype.</p>
+    <div class="slide__body grid-5" style="gap:12px">
+      <div class="card"><div class="num">01</div><h3>Problem</h3><p>The trust deficit</p></div>
+      <div class="card"><div class="num">02</div><h3>Solution</h3><p>TrustShield concept</p></div>
+      <div class="card"><div class="num">03</div><h3>Prototype</h3><p>Live demo + screens</p></div>
+      <div class="card"><div class="num">04</div><h3>Architecture</h3><p>Trust data-flow</p></div>
+      <div class="card"><div class="num">05</div><h3>Business Case</h3><p>Market &amp; economics</p></div>
+      <div class="card"><div class="num">06</div><h3>Competition</h3><p>Why a provider wins</p></div>
+      <div class="card"><div class="num">07</div><h3>Risk &amp; Ethics</h3><p>Responsible design</p></div>
+      <div class="card"><div class="num">08</div><h3>Roadmap</h3><p>Three phases</p></div>
+      <div class="card"><div class="num">09</div><h3>Scorecard</h3><p>KPIs for trust</p></div>
+      <div class="card"><div class="num">10</div><h3>AI Use</h3><p>Human + machine</p></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 3 — PROBLEM ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 1 · Problem</div>
+    <h2 class="slide__title">Trust online is breaking down</h2>
+    <div class="slide__body grid-2" style="align-items:center">
+      <div class="center">
+        <div class="stat-huge">73%</div>
+        <p class="lead center" style="margin-top:6px">of Americans have been <b class="accent">targeted by a scam.</b></p>
+      </div>
+      <div>
+        <ul class="ticks">
+          <li><svg class="icon" style="width:22px;height:22px" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg> <span><b>Scams</b> — fake calls, texts and emails draining savings.</span></li>
+          <li><svg class="icon" style="width:22px;height:22px" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2"><path d="M3 7l9 6 9-6M3 7v10h18V7M3 7l9-4 9 4"/></svg> <span><b>Phishing</b> — stolen logins and identities.</span></li>
+          <li><svg class="icon" style="width:22px;height:22px" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="10" r="4"/><path d="M4 20c0-3.5 3.6-6 8-6s8 2.5 8 6"/></svg> <span><b>Deepfakes</b> — fake voices and videos impersonating loved ones.</span></li>
+          <li><svg class="icon" style="width:22px;height:22px" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/></svg> <span><b>IoT vulnerabilities</b> — insecure smart-home devices.</span></li>
+          <li><svg class="icon" style="width:22px;height:22px" viewBox="0 0 24 24" fill="none" stroke="var(--white)" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="4"/></svg> <span><b>AI-powered fraud</b> — scams that scale and personalize automatically.</span></li>
+        </ul>
+        <div class="card" style="margin-top:16px;border-color:rgba(239,68,68,.4)">
+          <p style="color:#fecaca"><b>The elderly and children are hit hardest</b> — the people least equipped to spot a sophisticated attack.</p>
+        </div>
+      </div>
+    </div>
+    <div class="notes"><b>Speaker note (~1 min):</b> Open on the human cost — a grandparent wired money to a cloned voice; a child groomed through a game chat. Trust is the real casualty, and it's eroding fastest for the most vulnerable.</div>
+  </section>
+
+  <!-- ============ SLIDE 4 — SOLUTION OVERVIEW ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 2 · Solution</div>
+    <h2 class="slide__title">Meet <span class="accent">TrustShield</span></h2>
+    <p class="slide__sub">An AI digital-trust guardian delivered through the broadband provider's existing infrastructure — not another app you have to find and install.</p>
+    <div class="slide__body">
+      <div class="flow" style="justify-content:center;max-width:960px;margin:0 auto">
+        <div class="node" style="flex:1">
+          <svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.7"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 12h.01M11 12h6"/></svg>
+          <div class="t">Wi-Fi Gateway</div><div class="d">Protection built into the home router — on by default.</div>
+        </div>
+        <svg class="arrow" width="34" height="24" viewBox="0 0 34 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M2 12h28M24 6l6 6-6 6"/></svg>
+        <div class="node" style="flex:1">
+          <svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.7"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
+          <div class="t">Mobile App</div><div class="d">Alerts, checks and family controls in your pocket.</div>
+        </div>
+        <svg class="arrow" width="34" height="24" viewBox="0 0 34 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M2 12h28M24 6l6 6-6 6"/></svg>
+        <div class="node" style="flex:1">
+          <svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="var(--white)" stroke-width="1.7"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <div class="t">Web Dashboard</div><div class="d">The whole household's trust at a glance.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 5 — 5 CORE FEATURES ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 2 · Features</div>
+    <h2 class="slide__title">Five core features</h2>
+    <div class="slide__body grid-5">
+      <div class="card"><svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.7"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 11 4.6-2.4 8-6 8-11V5l-8-3Z"/><path d="M12 7v5"/><circle cx="12" cy="15" r="1" fill="var(--teal)"/></svg><h3>Real-Time Threat Detection</h3><p>Spots scams &amp; malicious traffic as it happens.</p></div>
+      <div class="card"><svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.7"><circle cx="12" cy="10" r="4"/><path d="M4 20c0-3.5 3.6-6 8-6s8 2.5 8 6"/><path d="M3 3l18 18" stroke="var(--danger)"/></svg><h3>Deepfake &amp; Content Authenticity</h3><p>Checks if a voice, video or image is real.</p></div>
+      <div class="card"><svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="var(--white)" stroke-width="1.7"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.3"/><path d="M3 19c0-3 2.7-5 6-5s6 2 6 5M15 19c0-2 .6-3.3 2-4"/></svg><h3>Family Trust Dashboard</h3><p>One view of everyone's protection.</p></div>
+      <div class="card"><svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.7"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><h3>Smart Privacy Center</h3><p>Plain-language control over your data.</p></div>
+      <div class="card"><svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.7"><path d="M4 15a8 8 0 1 1 16 0"/><path d="M12 15l4-3" stroke="var(--teal)" stroke-width="2"/></svg><h3>Trust Score (0–100)</h3><p>A simple number for your household's safety.</p></div>
+    </div>
+    <div class="notes"><b>Speaker note:</b> Each feature maps to a real fear — being scammed, being fooled by a fake, not knowing if the kids are safe, losing control of data, and not knowing where you stand. The Trust Score turns all of it into one friendly number.</div>
+  </section>
+
+  <!-- ============ SLIDE 6 — DESIGN PRINCIPLES ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 2 · How it works</div>
+    <h2 class="slide__title">Five design principles</h2>
+    <div class="slide__body grid-2" style="gap:16px 34px">
+      <div class="principle"><div class="ring"><svg class="icon" style="width:24px;height:24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><ellipse cx="12" cy="12" rx="9" ry="6"/><circle cx="12" cy="12" r="2.2"/><path d="M2 7l20 10" opacity=".5"/></svg></div>
+        <div><h3 style="color:var(--teal)">🫧 "Foggy Glass"</h3><p class="muted">We analyze <b>patterns, not content.</b> We can see the shape of a threat without reading your private messages.</p></div></div>
+      <div class="principle"><div class="ring"><svg class="icon" style="width:24px;height:24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M8 12h8"/></svg></div>
+        <div><h3>On-device / edge processing</h3><p class="muted">Analysis happens on the home gateway, so data stays home.</p></div></div>
+      <div class="principle"><div class="ring"><svg class="icon" style="width:24px;height:24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 15a8 8 0 0 1 16 0"/><circle cx="12" cy="15" r="1.5"/></svg></div>
+        <div><h3>Opt-in everything</h3><p class="muted">Every protection is a choice the customer turns on.</p></div></div>
+      <div class="principle"><div class="ring"><svg class="icon" style="width:24px;height:24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></div>
+        <div><h3>Explainable AI</h3><p class="muted">Every alert says <i>why</i>, in plain language.</p></div></div>
+      <div class="principle"><div class="ring"><svg class="icon" style="width:24px;height:24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3"/><path d="M5 20c0-3.3 3-6 7-6s7 2.7 7 6"/></svg></div>
+        <div><h3>Human escalation path</h3><p class="muted">A real person is always one tap away.</p></div></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 7 — CUSTOMER JOURNEY ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 2 · Journey</div>
+    <h2 class="slide__title">The customer journey</h2>
+    <div class="slide__body journey">
+      <div class="card"><div class="pill badge" style="margin-bottom:10px">Before</div><h3>Unprotected</h3><p>Scattered, reactive security. The customer worries but doesn't know what to do.</p></div>
+      <div style="display:flex;align-items:center"><svg class="arrow" width="40" height="24" viewBox="0 0 40 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M2 12h34M30 6l6 6-6 6"/></svg></div>
+      <div class="card" style="border-color:rgba(45,212,191,.5)"><div class="pill" style="margin-bottom:10px">During</div><h3>Onboarding &amp; daily use</h3><p>One-tap setup from the app. Clear alerts, easy overrides, growing confidence every day.</p></div>
+      <div style="display:flex;align-items:center"><svg class="arrow" width="40" height="24" viewBox="0 0 40 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M2 12h34M30 6l6 6-6 6"/></svg></div>
+      <div class="card"><div class="pill badge" style="margin-bottom:10px">After</div><h3>Ongoing trust</h3><p>A rising Trust Score and a weekly digest turn safety into a lasting relationship.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 8 — PROTOTYPE INTRO ============ -->
+  <section class="slide center">
+    <div class="slide__kicker">Deliverable 3 · Prototype</div>
+    <h2 class="slide__title center">We built a working prototype</h2>
+    <p class="lead center">Vanguard IV will <b class="accent">demo TrustShield live</b> — not slides of an idea, but a clickable product. The next slide previews the <b>six key screens</b> you'll see in that demo.</p>
+    <div style="margin-top:22px" class="pill">▶ Live demo follows the deck</div>
+  </section>
+
+  <!-- ============ SLIDE 9 — 6 MOCKUPS ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 3 · Screens</div>
+    <h2 class="slide__title">Six key screens</h2>
+    <div class="slide__body grid-3" style="gap:14px">
+      <div class="mock"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><h4>① Family Trust Dashboard</h4><div class="row ok"><span>Mom's phone</span><span class="yes">Safe</span></div><div class="row ok"><span>Kids' tablet</span><span class="yes">Safe</span></div><div class="row warn"><span>Smart TV</span><span class="partial">Review</span></div></div></div>
+      <div class="mock"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><h4>② Threat Alert — with "why"</h4><div class="row bad"><span>⚠ Suspicious call blocked</span></div><p class="muted" style="font-size:11px;line-height:1.4">Why: caller ID spoofed a bank &amp; matched a known scam pattern.</p><div class="row"><span>Not a scam? Allow</span><span class="toggle off"></span></div></div></div>
+      <div class="mock"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><h4>③ Deepfake Checker</h4><div class="row"><span>voice_msg.mp3</span></div><div class="row bad"><span>Likely AI-generated</span><span class="no">87%</span></div><p class="muted" style="font-size:11px">Metadata &amp; audio patterns, not the words.</p></div></div>
+      <div class="mock"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><h4>④ Smart Privacy Center</h4><div class="row"><span>Threat pattern analysis</span><span class="toggle"></span></div><div class="row"><span>Share anonymized data</span><span class="toggle off"></span></div><div class="row"><span>Content scanning</span><span class="toggle off"></span></div></div></div>
+      <div class="mock"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><h4>⑤ Trust Score</h4><div style="text-align:center;padding:6px 0"><div style="font-size:34px;font-weight:900;color:var(--teal)">86</div><div class="muted" style="font-size:11px">/ 100 · Strong</div></div><div class="row ok"><span>5 threats stopped this week</span></div></div></div>
+      <div class="mock"><div class="bar"><i></i><i></i><i></i></div><div class="scr"><h4>⑥ Weekly Trust Digest</h4><div class="row ok"><span>Threats prevented</span><span class="yes">12</span></div><div class="row"><span>Deepfakes flagged</span><span>2</span></div><div class="row ok"><span>Score change</span><span class="yes">+4</span></div></div></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 10 — TRUST ARCHITECTURE ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 4 · Architecture</div>
+    <h2 class="slide__title">Trust architecture — the data flow</h2>
+    <p class="slide__sub">Everything is analyzed through <b class="accent">"foggy glass"</b> — patterns and metadata, never your actual content — and processed <b class="accent">on-device</b> at the gateway.</p>
+    <div class="slide__body">
+      <div class="flow" style="overflow-x:auto;padding-bottom:6px">
+        <div class="node" style="min-width:150px"><div class="t">1 · Data enters</div><div class="d">Network traffic hits the gateway</div></div>
+        <svg class="arrow" width="30" height="20" viewBox="0 0 30 20" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M2 10h24M20 5l6 5-6 5"/></svg>
+        <div class="node" style="min-width:160px;border-color:rgba(45,212,191,.6)"><div class="t accent">2 · On-device analysis</div><div class="d">"Foggy glass" — patterns &amp; metadata only</div></div>
+        <svg class="arrow" width="30" height="20" viewBox="0 0 30 20" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M2 10h24M20 5l6 5-6 5"/></svg>
+        <div class="node" style="min-width:150px"><div class="t">3 · Decision</div><div class="d">Safe · warn · escalate</div></div>
+        <svg class="arrow" width="30" height="20" viewBox="0 0 30 20" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M2 10h24M20 5l6 5-6 5"/></svg>
+        <div class="node" style="min-width:150px"><div class="t">4 · Customer sees</div><div class="d">Plain-language alert with "why"</div></div>
+        <svg class="arrow" width="30" height="20" viewBox="0 0 30 20" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M2 10h24M20 5l6 5-6 5"/></svg>
+        <div class="node" style="min-width:150px;border-color:rgba(52,211,153,.5)"><div class="t" style="color:var(--success)">5 · What remains</div><div class="d">Only anonymized patterns. <b>Raw content is discarded — never stored.</b></div></div>
+      </div>
+    </div>
+    <div class="notes"><b>Speaker note (~1 min):</b> This is the technical heart. Walk judges left to right. The key line: raw content never leaves the home and is never stored — we keep only the anonymized pattern needed to protect the next family.</div>
+  </section>
+
+  <!-- ============ SLIDE 11 — BUSINESS: MARKET ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 5 · Business Case (1/2)</div>
+    <h2 class="slide__title">The market &amp; our assumptions</h2>
+    <div class="slide__body grid-4" style="gap:14px">
+      <div class="card stat-tile"><div class="v">30M</div><div class="l">residential customers</div></div>
+      <div class="card stat-tile"><div class="v">2.5M</div><div class="l">SMB customers</div></div>
+      <div class="card stat-tile"><div class="v">$70<span style="font-size:.5em">/mo</span></div><div class="l">avg residential revenue ($840/yr)</div></div>
+      <div class="card stat-tile"><div class="v">12%</div><div class="l">annual churn</div></div>
+      <div class="card stat-tile"><div class="v">$350</div><div class="l">to acquire / replace a customer</div></div>
+      <div class="card stat-tile"><div class="v">75%</div><div class="l">provider-managed gateways</div></div>
+      <div class="card stat-tile"><div class="v">8%</div><div class="l">already buy a security add-on</div></div>
+      <div class="card stat-tile" style="border-color:rgba(45,212,191,.6)"><div class="v">$7.99<span style="font-size:.5em">/mo</span></div><div class="l">TrustShield price</div></div>
+    </div>
+    <div class="card" style="margin-top:16px;text-align:center;border-color:rgba(56,189,248,.5)">
+      <p class="lead" style="margin:0">Target adoption: <b class="accent">10%</b> of residential customers = <b class="accent">3M subscribers</b></p>
+    </div>
+    <div class="notes"><b>Speaker note:</b> These figures are the fixed assumptions for the challenge — present them exactly, don't round. 10% adoption is deliberately conservative versus the 8% who already pay for security today.</div>
+  </section>
+
+  <!-- ============ SLIDE 12 — BUSINESS: ECONOMICS ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 5 · Business Case (2/2)</div>
+    <h2 class="slide__title">Economics &amp; break-even</h2>
+    <div class="slide__body grid-2" style="align-items:center;gap:30px">
+      <div>
+        <div class="grid-2" style="gap:12px">
+          <div class="card stat-tile" style="border-color:rgba(45,212,191,.6)"><div class="v">~$288M</div><div class="l">annual revenue (3M × $7.99 × 12)</div></div>
+          <div class="card stat-tile"><div class="v">$50M</div><div class="l">initial development</div></div>
+          <div class="card stat-tile"><div class="v">$25M</div><div class="l">annual operations</div></div>
+          <div class="card stat-tile"><div class="v">$1.50<span style="font-size:.5em">/sub/mo</span></div><div class="l">support cost</div></div>
+          <div class="card stat-tile"><div class="v">$30<span style="font-size:.5em">/sub</span></div><div class="l">marketing per acquired sub</div></div>
+          <div class="card stat-tile" style="border-color:rgba(52,211,153,.5)"><div class="v">1.0 pt</div><div class="l">churn reduction among users</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="bars">
+          <div class="barcol"><div class="pair"><div class="b cost" style="height:124px"></div><div class="b rev" style="height:76px"></div></div><div class="yr">Year 1</div></div>
+          <div class="barcol"><div class="pair"><div class="b cost" style="height:92px"></div><div class="b rev" style="height:96px"></div></div><div class="yr">Year 2</div></div>
+          <div class="barcol"><div class="pair"><div class="b cost" style="height:80px"></div><div class="b rev" style="height:176px"></div></div><div class="yr">Year 3</div></div>
+        </div>
+        <div style="display:flex;gap:18px;justify-content:center;margin-top:10px;font-size:13px">
+          <span><span style="display:inline-block;width:12px;height:12px;background:#f59e0b;border-radius:3px;vertical-align:-1px"></span> Cost</span>
+          <span><span style="display:inline-block;width:12px;height:12px;background:var(--teal);border-radius:3px;vertical-align:-1px"></span> Revenue</span>
+        </div>
+        <p class="center accent" style="margin-top:10px;font-weight:800">Break-even ≈ Year 2</p>
+      </div>
+    </div>
+    <div class="notes"><b>Speaker note (~1 min):</b> Revenue scales as adoption ramps; costs are front-loaded by the $50M build. The crossover lands around Year 2 — and the 1-point churn reduction on $840/yr customers is a second, often-overlooked payback.</div>
+  </section>
+
+  <!-- ============ SLIDE 13 — COMPETITIVE ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 6 · Competition</div>
+    <h2 class="slide__title">Why a broadband provider wins</h2>
+    <div class="slide__body">
+      <table class="matrix">
+        <thead><tr><th>Advantage</th><th class="own">TrustShield</th><th>Norton / McAfee</th><th>Apple / Google</th><th>Standalone apps</th></tr></thead>
+        <tbody>
+          <tr><td>Network-layer protection</td><td class="own"><span class="yes">✓</span></td><td><span class="no">✗</span></td><td><span class="partial">◐</span></td><td><span class="no">✗</span></td></tr>
+          <tr><td>Existing billing relationship</td><td class="own"><span class="yes">✓</span></td><td><span class="no">✗</span></td><td><span class="partial">◐</span></td><td><span class="no">✗</span></td></tr>
+          <tr><td>Manages the gateway hardware</td><td class="own"><span class="yes">✓</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td></tr>
+          <tr><td>Trusted <i>local</i> brand</td><td class="own"><span class="yes">✓</span></td><td><span class="partial">◐</span></td><td><span class="partial">◐</span></td><td><span class="no">✗</span></td></tr>
+        </tbody>
+      </table>
+      <p class="foot-note">Competitors protect a device or a walled garden. Only the provider sits at the <b class="accent">network layer</b>, bills the customer already, owns the gateway, and is a trusted local name.</p>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 14 — RISK & ETHICS ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 7 · Risk &amp; Ethics</div>
+    <h2 class="slide__title">Responsible by design</h2>
+    <div class="slide__body grid-3">
+      <div class="card"><div class="pill badge" style="margin-bottom:8px">Risk 1 · Privacy</div><h3>Function creep</h3><p>Could a "trust" tool quietly become surveillance?</p><p style="margin-top:8px;color:var(--white)"><b class="accent">Mitigations:</b></p><ul class="ticks" style="margin-top:6px"><li style="font-size:14px"><span>✅ Immutable privacy policy</span></li><li style="font-size:14px"><span>✅ Independent third-party audits</span></li><li style="font-size:14px"><span>✅ Customer data council</span></li></ul></div>
+      <div class="card"><div class="pill badge" style="margin-bottom:8px">Risk 2 · Accuracy</div><h3>False positives</h3><p>What if we flag something safe?</p><p style="margin-top:8px;color:var(--white)"><b class="accent">Mitigations:</b></p><ul class="ticks" style="margin-top:6px"><li style="font-size:14px"><span>✅ "Warn, don't block" default</span></li><li style="font-size:14px"><span>✅ One-tap easy override</span></li><li style="font-size:14px"><span>✅ Feedback loop improves the model</span></li></ul></div>
+      <div class="card"><div class="pill badge" style="margin-bottom:8px">Risk 3 · Equity</div><h3>A safety divide</h3><p>Will only wealthy households be protected?</p><p style="margin-top:8px;color:var(--white)"><b class="accent">Mitigations:</b></p><ul class="ticks" style="margin-top:6px"><li style="font-size:14px"><span>✅ Free basic tier for all</span></li><li style="font-size:14px"><span>✅ Subsidized low-income access</span></li></ul></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 15 — TRUST PARADOX ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Required · The Trust Paradox</div>
+    <h2 class="slide__title">The Trust Paradox</h2>
+    <div class="slide__body grid-2" style="gap:28px;align-items:start">
+      <div class="card" style="border-color:rgba(245,158,11,.5)">
+        <div class="pill badge" style="margin-bottom:10px">The scenario</div>
+        <p>A privacy-advocacy organization questions how TrustShield analyzes data. Some customers fear being <b>"watched."</b> Others defend the product. The press is paying attention.</p>
+      </div>
+      <div class="card" style="border-color:rgba(45,212,191,.6)">
+        <div class="pill" style="margin-bottom:10px">Our response</div>
+        <ul class="ticks">
+          <li><span>🫧 <b>"Foggy glass" was built in from day one</b> — we designed for exactly this question.</span></li>
+          <li><span>🔍 We analyze <b>patterns &amp; metadata, never content.</b></span></li>
+          <li><span>🏠 Processing is <b>on-device</b> at the gateway.</span></li>
+          <li><span>⚙️ Everything is <b>auditable in the Privacy Center.</b></span></li>
+          <li><span>🤝 We <b>invite independent third-party audits.</b></span></li>
+        </ul>
+        <p style="margin-top:12px" class="accent"><b>This is validation, not a crisis.</b></p>
+      </div>
+    </div>
+    <div class="notes"><b>Speaker note (~1 min):</b> Don't get defensive — welcome the scrutiny. The architecture answers the question before it's asked. Pivot: scrutiny proves the market needs exactly this kind of trustworthy design.</div>
+  </section>
+
+  <!-- ============ SLIDE 16 — ROADMAP ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 8 · Roadmap</div>
+    <h2 class="slide__title">Implementation roadmap</h2>
+    <div class="slide__body timeline">
+      <div class="card phase"><div class="tag">Phase 1 · Pilot</div><div class="when">6 months</div><ul class="ticks"><li style="font-size:14px"><span>50K households</span></li><li style="font-size:14px"><span>3 markets</span></li><li style="font-size:14px"><span>Core detection + dashboard</span></li></ul></div>
+      <div class="card phase" style="border-color:rgba(45,212,191,.5)"><div class="tag">Phase 2 · Scale</div><div class="when">Year 1–2</div><ul class="ticks"><li style="font-size:14px"><span>3M subscribers</span></li><li style="font-size:14px"><span>Add deepfake checker</span></li><li style="font-size:14px"><span>Add family features</span></li></ul></div>
+      <div class="card phase"><div class="tag">Phase 3 · Expansion</div><div class="when">Year 2–3</div><ul class="ticks"><li style="font-size:14px"><span>SMB tier</span></li><li style="font-size:14px"><span>MDU / hospitality</span></li><li style="font-size:14px"><span>API partnerships</span></li><li style="font-size:14px"><span>Community trust features</span></li></ul></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 17 — SCORECARD / KPIs ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 9 · Scorecard</div>
+    <h2 class="slide__title">Measuring trust — our KPIs</h2>
+    <div class="slide__body grid-4" style="gap:14px">
+      <div class="card stat-tile"><div class="v">10%</div><div class="l">adoption by Year 2</div></div>
+      <div class="card stat-tile"><div class="v">60%+</div><div class="l">weekly active usage</div></div>
+      <div class="card stat-tile"><div class="v">↑</div><div class="l">threats prevented / household / month</div></div>
+      <div class="card stat-tile"><div class="v">&lt;2%</div><div class="l">false-positive rate</div></div>
+      <div class="card stat-tile"><div class="v">50+</div><div class="l">Net Promoter Score</div></div>
+      <div class="card stat-tile"><div class="v">↓</div><div class="l">churn reduction: users vs non-users</div></div>
+      <div class="card stat-tile"><div class="v">&lt;0.1%</div><div class="l">privacy complaint rate</div></div>
+      <div class="card stat-tile" style="border-color:rgba(45,212,191,.5)"><div class="v accent">Trust</div><div class="l">every metric ladders up to trust</div></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 18 — TRUST SCORE SPOTLIGHT ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Feature spotlight · Trust Score</div>
+    <h2 class="slide__title">A simple number that drives better habits</h2>
+    <div class="slide__body grid-2" style="align-items:center;gap:34px">
+      <div class="center">
+        <svg viewBox="0 0 200 200" style="width:clamp(190px,26vw,260px);height:auto">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#0d2033" stroke-width="18"/>
+          <circle cx="100" cy="100" r="80" fill="none" stroke="url(#g)" stroke-width="18" stroke-linecap="round"
+            stroke-dasharray="502" stroke-dashoffset="70" transform="rotate(-90 100 100)"/>
+          <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2dd4bf"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs>
+          <text x="100" y="100" text-anchor="middle" font-size="58" font-weight="900" fill="#f8fafc">86</text>
+          <text x="100" y="128" text-anchor="middle" font-size="15" fill="#94a3b8">/ 100 · Strong</text>
+        </svg>
+      </div>
+      <div>
+        <p class="lead" style="margin-bottom:14px">Your score rises as you build safer habits — like a credit score for digital trust.</p>
+        <ul class="ticks">
+          <li><span>📱 <b>Devices protected</b> — more covered, higher score.</span></li>
+          <li><span>🛡️ <b>Threats handled</b> — acting on alerts earns points.</span></li>
+          <li><span>⚙️ <b>Privacy settings reviewed</b> — staying in control counts.</span></li>
+        </ul>
+        <p class="foot-note">Gamification makes safety feel rewarding, not scary.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 19 — AI UTILIZATION ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Deliverable 10 · AI Utilization</div>
+    <h2 class="slide__title">How we used AI — and where we didn't</h2>
+    <div class="slide__body list-split">
+      <div class="card">
+        <h3><svg class="icon" style="width:22px;height:22px" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.7"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3.5"/></svg> Where AI helped</h3>
+        <ul class="ticks"><li style="font-size:15px"><span>Research into the threat landscape</span></li><li style="font-size:15px"><span>Brainstorming features &amp; names</span></li><li style="font-size:15px"><span>Business-case modeling</span></li><li style="font-size:15px"><span>Prototype "vibe-coding"</span></li><li style="font-size:15px"><span>Building this presentation</span></li></ul>
+      </div>
+      <div class="card" style="border-color:rgba(56,189,248,.5)">
+        <h3><svg class="icon" style="width:22px;height:22px" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.7"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.3 3-6 7-6s7 2.7 7 6"/></svg> Where human judgment was critical</h3>
+        <ul class="ticks"><li style="font-size:15px"><span>Choosing the core concept</span></li><li style="font-size:15px"><span>Every ethical decision</span></li><li style="font-size:15px"><span>UX design &amp; empathy</span></li><li style="font-size:15px"><span>Validating &amp; fact-checking AI outputs</span></li></ul>
+      </div>
+    </div>
+    <div class="notes"><b>Speaker note:</b> Judges allocate time to this — spend <b>at least one minute</b> here. Be specific and honest: AI accelerated the work; we owned the judgment, the ethics, and verifying everything it produced.</div>
+  </section>
+
+  <!-- ============ SLIDE 20 — JUDGING CRITERIA ============ -->
+  <section class="slide">
+    <div class="slide__kicker">Rubric</div>
+    <h2 class="slide__title">How we hit every judging criterion</h2>
+    <div class="slide__body">
+      <div class="criteria-row"><div class="label">Trust-Building Impact</div><div class="track"><div class="fill" style="width:100%"></div></div><div class="w">25%</div></div>
+      <div class="criteria-row"><div class="label">Innovation &amp; Differentiation</div><div class="track"><div class="fill" style="width:80%"></div></div><div class="w">20%</div></div>
+      <div class="criteria-row"><div class="label">Business Viability</div><div class="track"><div class="fill" style="width:80%"></div></div><div class="w">20%</div></div>
+      <div class="criteria-row"><div class="label">Technical &amp; Operational Feasibility</div><div class="track"><div class="fill" style="width:60%"></div></div><div class="w">15%</div></div>
+      <div class="criteria-row"><div class="label">Responsible Technology Design</div><div class="track"><div class="fill" style="width:40%"></div></div><div class="w">10%</div></div>
+      <div class="criteria-row"><div class="label">Presentation &amp; Use of AI</div><div class="track"><div class="fill" style="width:40%"></div></div><div class="w">10%</div></div>
+      <p class="foot-note">Total = 100%. Innovation highlight: a <b class="accent">digital trust layer only a broadband provider can deliver — not another antivirus.</b></p>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 21 — INNOVATION STATEMENT ============ -->
+  <section class="slide center">
+    <div class="slide__kicker">Innovation</div>
+    <h2 class="slide__title center">TrustShield is a <span class="accent">digital trust layer</span>,<br>not another antivirus.</h2>
+    <p class="lead center" style="margin-bottom:20px">It can only be delivered by a broadband provider — because it lives where no app can reach.</p>
+    <div class="slide__body grid-4" style="max-width:980px;margin:0 auto">
+      <div class="card center"><h3 class="accent">Network layer</h3><p>Sees threats before they reach any device.</p></div>
+      <div class="card center"><h3 class="accent">Billing relationship</h3><p>One tap, one bill — no new account.</p></div>
+      <div class="card center"><h3 class="accent">Gateway hardware</h3><p>Protection built into the router.</p></div>
+      <div class="card center"><h3 class="accent">Trusted local brand</h3><p>A name the community already knows.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 22 — IMPACT & CTA ============ -->
+  <section class="slide center">
+    <div class="slide__kicker">Impact</div>
+    <h2 class="slide__title center">Restoring confidence in a connected world</h2>
+    <div class="slide__body grid-3" style="max-width:1000px;margin:0 auto">
+      <div class="card center"><svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.6"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.3"/><path d="M3 19c0-3 2.7-5 6-5s6 2 6 5"/></svg><h3>Families protected</h3><p>Especially the elderly and children — the people hit hardest.</p></div>
+      <div class="card center" style="border-color:rgba(52,211,153,.5)"><svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.6"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10Z"/></svg><h3>Equity built in</h3><p>A free basic tier so safety isn't only for the wealthy.</p></div>
+      <div class="card center"><svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg><h3>The ask</h3><p>Greenlight the Phase 1 pilot — 50K households, 3 markets.</p></div>
+    </div>
+    <p class="lead center accent" style="margin-top:22px;font-weight:800">Let's rebuild trust, one household at a time.</p>
+  </section>
+
+  <!-- ============ SLIDE 23 — CLOSING ============ -->
+  <section class="slide center">
+    <div class="slide__body center" style="display:flex;flex-direction:column;align-items:center;gap:10px">
+      <div class="wordmark">
+        <svg style="width:clamp(40px,6vw,78px);height:clamp(40px,6vw,78px)" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.6"><path d="M12 2 4 5v6c0 5 3.4 8.6 8 11 4.6-2.4 8-6 8-11V5l-8-3Z" fill="rgba(45,212,191,.12)"/><path d="m8.5 12 2.5 2.5L16 9" stroke="var(--cyan)" stroke-width="1.8"/></svg>
+        <span class="wm-text">Trust<b>Shield</b></span>
+      </div>
+      <h2 class="slide__title center" style="margin-top:14px">Thank you</h2>
+      <div class="pill" style="margin:6px 0">Team <b style="margin-left:4px">Vanguard IV</b></div>
+      <p class="lead center accent2" style="font-weight:700">Bridging the Trust Deficit</p>
+      <p class="muted" style="margin-top:16px">▶ A live prototype demo follows.</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== chrome ===== -->
+<button class="navbtn" id="prevBtn" aria-label="Previous slide"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
+<button class="navbtn" id="nextBtn" aria-label="Next slide"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
+<div id="dots"></div>
+<footer>
+  <div class="brand">Vanguard <span>IV</span></div>
+  <div class="muted">TrustShield · 2026 SCTE-RMC High School Innovation Challenge</div>
+  <div id="counter">01 / 23</div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  function init(){
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    var len = slides.length;
+    var current = 0;
+    var progress = document.getElementById('progress');
+    var counter  = document.getElementById('counter');
+    var dotsWrap = document.getElementById('dots');
+
+    function pad(n){ return (n < 10 ? '0' : '') + n; }
+
+    // build nav dots from the real slide count
+    var dots = [];
+    for (var i = 0; i < len; i++){
+      (function(idx){
+        var b = document.createElement('button');
+        b.setAttribute('aria-label', 'Go to slide ' + (idx+1));
+        b.addEventListener('click', function(e){ e.stopPropagation(); goTo(idx); });
+        dotsWrap.appendChild(b);
+        dots.push(b);
+      })(i);
+    }
+
+    function goTo(i){
+      i = Math.max(0, Math.min(len - 1, i));
+      for (var s = 0; s < len; s++){
+        slides[s].classList.remove('slide--active', 'slide--prev');
+        if (s < i) slides[s].classList.add('slide--prev');
+      }
+      slides[i].classList.add('slide--active');
+      current = i;
+      counter.textContent = pad(i + 1) + ' / ' + pad(len);
+      progress.style.width = ((i + 1) / len * 100) + '%';
+      for (var d = 0; d < len; d++){ dots[d].classList.toggle('active', d === i); }
+      if (history.replaceState) history.replaceState(null, '', '#' + (i + 1));
+    }
+    function next(){ goTo(current + 1); }
+    function prev(){ goTo(current - 1); }
+
+    document.addEventListener('keydown', function(e){
+      switch (e.key){
+        case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': next(); e.preventDefault(); break;
+        case 'ArrowLeft':  case 'ArrowUp':   case 'PageUp': prev(); e.preventDefault(); break;
+        case 'Home': goTo(0); break;
+        case 'End':  goTo(len - 1); break;
+        case 'n': case 'N': case 's': case 'S': document.body.classList.toggle('show-notes'); break;
+        case 'f': case 'F':
+          if (!document.fullscreenElement && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+          else if (document.exitFullscreen) document.exitFullscreen();
+          break;
+      }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', function(e){ e.stopPropagation(); next(); });
+    document.getElementById('prevBtn').addEventListener('click', function(e){ e.stopPropagation(); prev(); });
+
+    // click zones: right 40% -> next, left 20% -> prev; ignore buttons/links/toggles
+    document.addEventListener('click', function(e){
+      if (e.target.closest('button') || e.target.closest('a') || e.target.closest('#dots')) return;
+      var x = e.clientX / window.innerWidth;
+      if (x > 0.6) next();
+      else if (x < 0.2) prev();
+    });
+
+    // deep-link on load
+    var start = 0;
+    if (location.hash){
+      var h = parseInt(location.hash.replace('#',''), 10);
+      if (!isNaN(h) && h >= 1 && h <= len) start = h - 1;
+    }
+    goTo(start);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</body>
+</html>
