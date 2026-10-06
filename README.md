@@ -153,6 +153,26 @@ After making changes, save the file and your browser should automatically refres
 
 ---
 
+## 🤖 Using AI to Keep Building (Start Here!)
+
+We included a file called **`AI-CONTEXT.md`** in this repo. This is your secret weapon. It contains everything an AI assistant needs to know about the TrustShield project — the concept, the tech stack, the file structure, the business case, and the judging criteria.
+
+### How to Use It
+1. Open `AI-CONTEXT.md` in this repo
+2. **Copy the entire contents**
+3. **Paste it into any AI tool** (Gemini, ChatGPT, Antigravity, Bolt, etc.) at the start of your conversation
+4. Then ask your question or describe what you want to change
+
+**Example:** paste the context, then say:
+> "I want to add a new threat type called 'AI Voice Cloning' to the dashboard's recent activity feed. Show me how."
+
+The AI will already know your project structure, which files to edit, and how to keep things consistent — because you gave it the context file.
+
+### If You're Using Kiro
+This project also has a `.kiro/steering/` file baked in. That means if you open this workspace in Kiro, it automatically knows everything about TrustShield without you pasting anything. Just start asking questions.
+
+---
+
 ## 🛠️ Free Tools to Help You Build
 
 You don't need to be an expert coder to improve this project. These free AI tools can help you make changes, fix bugs, and add new features just by describing what you want in plain English.
