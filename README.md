@@ -214,6 +214,27 @@ git push
 
 ---
 
+## 📋 The 10 Deliverables Explained
+
+The challenge asks every team to submit and present a recommendation with these **10 components**. This is the checklist your final presentation must cover. (Note: this is different from the 6 *judging criteria* below — the deliverables are *what you turn in*, the criteria are *how it's scored*.)
+
+| # | Deliverable | What It Means | Where We Cover It |
+|---|---|---|---|
+| 1 | **Problem Definition** | Clearly name the trust problem, who the target customer is, the unmet need, and why it matters. | Presentation slide 3; the scam/fraud/deepfake problem families face |
+| 2 | **Solution Concept** | Describe the technology/service and the customer journey — what happens *before*, *during*, and *after* a customer uses it. | Presentation slides 4–7; the whole prototype |
+| 3 | **Prototype, Demo, or Simulation** | A low-to-high fidelity version that shows how the solution works. | The live app demo (`trustshield-prototype/`) |
+| 4 | **Trust Architecture** | Show the data flow: what data enters → what happens to it → what decision/action occurs → what the customer sees → what data remains afterward. Emphasize privacy. | Presentation slide 10; the Privacy Center "foggy glass" model |
+| 5 | **Business Case** | Economic rationale: target market, expected adoption, revenue, development/operating costs, acquisition costs, retention value, and break-even point. | Presentation slides 11–12; ~$288M revenue, Year 2 break-even |
+| 6 | **Competitive & Ecosystem Analysis** | Identify competitors and partners, and explain why a broadband provider has a defensible role in the ecosystem. | Presentation slide 13; broadband provider advantage |
+| 7 | **Risk & Ethics Assessment** | Identify your 3 biggest risks (at least one about privacy/data governance) and a mitigation strategy for each. | Presentation slide 14; function creep, false positives, equity |
+| 8 | **Implementation Roadmap** | A 1–3 year deployment plan: Phase 1 Pilot → Phase 2 Scale → Phase 3 Expansion. | Presentation slide 15; phased rollout |
+| 9 | **Trust Scorecard** | 5–7 KPIs that leadership would use to decide whether the solution is actually increasing trust and creating business value. | Presentation slide 16; adoption, usage, false-positive rate, NPS, churn reduction, etc. |
+| 10 | **AI Utilization** | Explain how your team used AI to build the project: which tools, what for, how you validated AI output, and where human judgment mattered. Spend at least **1 minute** of your presentation on this. | Presentation slide 17; be honest about using AI tools + human decisions |
+
+**Quick tip for Sultan's question:** The *deliverables* are the sections your presentation needs. The *judging criteria* (below) are the lens the judges use to score those sections. Cover all 10 deliverables well, and you'll naturally hit the criteria.
+
+---
+
 ## 📊 Judging Criteria — Where We Address Each One
 
 | Criterion | Weight | Where It Shows Up |
@@ -250,6 +271,7 @@ git push
 
 - **Code not running?** Make sure Node.js is installed and you ran `npm install` first
 - **Browser shows an error?** Check the terminal where you ran `npm run dev` for error messages
+- **App loads blank or with no styling?** The build cache may be corrupted. Stop the server (`Ctrl + C`), delete the `.next` folder inside `trustshield-prototype/`, then run `npm run dev` again.
 - **Want to change something but don't know how?** Copy the error or describe what you want into Gemini, ChatGPT, or any AI tool — they're great at explaining code
 - **Broke something?** Run `git checkout .` to undo all changes and get back to the original code
 
