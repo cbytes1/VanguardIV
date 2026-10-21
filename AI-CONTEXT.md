@@ -9,7 +9,7 @@ I'm a member of **Team Vanguard V**, a high school freshman team competing in th
 
 Our concept is **TrustShield** — an AI-powered scam, fraud, and digital-trust guardian for families, delivered through a broadband provider's existing infrastructure (Wi-Fi gateway + app + web dashboard).
 
-Our GitHub repo: https://github.com/cbytes1/VanguardIV/
+Our GitHub repo: https://github.com/cbytes1/VanguardV/
 
 ## What We've Built So Far
 1. **A working web app prototype** — 6 interactive screens built with Next.js 15 + React 19 + TypeScript + Tailwind CSS

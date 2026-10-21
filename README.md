@@ -90,10 +90,10 @@ This requires a few free tools installed first. Follow these steps carefully:
 2. Open the built-in Terminal inside VS Code by pressing **`Ctrl + ~`** (or from the top menu: **Terminal → New Terminal**)
 3. In the terminal at the bottom of VS Code, type:
 ```bash
-git clone https://github.com/cbytes1/VanguardIV.git
-cd VanguardIV/trustshield-prototype
+git clone https://github.com/cbytes1/VanguardV.git
+cd VanguardV/trustshield-prototype
 ```
-4. Then click **File → Open Folder...** in VS Code and select the `VanguardIV` folder you just downloaded so you can see all the files in the left sidebar!
+4. Then click **File → Open Folder...** in VS Code and select the `VanguardV` folder you just downloaded so you can see all the files in the left sidebar!
 
 #### Step 5: Install Dependencies and Run
 In the VS Code terminal (inside the `trustshield-prototype` folder), run:

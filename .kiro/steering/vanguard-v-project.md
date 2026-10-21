@@ -8,7 +8,7 @@ The team's concept is **TrustShield** — an AI-powered scam, fraud, and digital
 ## Key Files
 - `vanguard-v-presentation.html` — Self-contained 23-slide HTML presentation (all 10 deliverables)
 - `trustshield-prototype/` — Next.js 15 + React 19 + TypeScript + Tailwind CSS web app prototype
-- GitHub repo: https://github.com/cbytes1/VanguardIV/
+- GitHub repo: https://github.com/cbytes1/VanguardV/
 
 ## The Concept: TrustShield
 Five core features:
