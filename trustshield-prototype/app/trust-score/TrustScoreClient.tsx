@@ -17,7 +17,7 @@ import { cn, scoreTone } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
 // Peer comparison copy. The spec fixes this at 78%; keeping it as a constant
-// makes it easy for the Vanguard IV team to tweak later.
+// makes it easy for the Vanguard V team to tweak later.
 // ---------------------------------------------------------------------------
 const SAFER_THAN_PERCENT = 78;
 

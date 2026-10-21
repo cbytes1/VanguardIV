@@ -1,11 +1,11 @@
-# AI Context File — TrustShield by Vanguard IV
+# AI Context File — TrustShield by Vanguard V
 
-> **What is this file?** This is a context file you can paste into any AI tool (Gemini, ChatGPT, Claude, Antigravity, Bolt, Copilot, etc.) so the AI understands your project without you having to explain everything from scratch. Copy the contents of this file and paste it at the start of your conversation with any AI assistant.
+> **What is this file?** This is a context file you can paste into a web chatbot (**Gemini** at gemini.google.com or **ChatGPT** at chatgpt.com) so the AI understands your entire project without you having to explain everything from scratch. Copy the contents of this file and paste it at the start of your conversation!
 
 ---
 
 ## Project Overview
-I'm a member of **Team Vanguard IV**, a high school freshman team competing in the **2026 SCTE-RMC High School Innovation Challenge**. The challenge theme is "Bridging the Trust Deficit: Designing Technologies That Restore Confidence in a Connected World."
+I'm a member of **Team Vanguard V**, a high school freshman team competing in the **2026 SCTE-RMC High School Innovation Challenge**. The challenge theme is "Bridging the Trust Deficit: Designing Technologies That Restore Confidence in a Connected World."
 
 Our concept is **TrustShield** — an AI-powered scam, fraud, and digital-trust guardian for families, delivered through a broadband provider's existing infrastructure (Wi-Fi gateway + app + web dashboard).
 
@@ -79,11 +79,25 @@ npm run dev
 # Open http://localhost:3000
 ```
 
-## Instructions for the AI
-- I'm a high school freshman — please keep explanations simple and clear
-- When suggesting code changes, tell me which file to edit and show me the full updated code
-- After changes, remind me to save and check if `npm run build` still works
-- Keep the dark navy/teal/cyan color scheme consistent
-- Keep "Team Vanguard IV" and "TrustShield" branding
-- This is a demo prototype with mock data — don't add real backends or databases
-- If I want to change data (family name, devices, threats), the file is `data/mock.ts`
+## Which File Controls What (Quick Reference)
+- `trustshield-prototype/data/mock.ts` — ALL mock data (family members, devices, threats, recent activity, Trust Score, recommendations)
+- `trustshield-prototype/lib/types.ts` — TypeScript data types
+- `trustshield-prototype/components/Sidebar.tsx` — Left navigation sidebar and Team Vanguard V branding
+- `trustshield-prototype/app/page.tsx` — Welcome / Landing page (`/`)
+- `trustshield-prototype/app/dashboard/DashboardClient.tsx` — Screen 1: Dashboard (`/dashboard`)
+- `trustshield-prototype/app/threat-monitor/ThreatMonitorClient.tsx` — Screen 2: Threat Monitor (`/threat-monitor`)
+- `trustshield-prototype/app/deepfake-checker/DeepfakeCheckerClient.tsx` — Screen 3: Deepfake Checker (`/deepfake-checker`)
+- `trustshield-prototype/app/family-protection/FamilyProtectionClient.tsx` — Screen 4: Family Protection (`/family-protection`)
+- `trustshield-prototype/app/privacy-center/PrivacyCenterClient.tsx` — Screen 5: Privacy Center / "Foggy Glass" (`/privacy-center`)
+- `trustshield-prototype/app/trust-score/TrustScoreClient.tsx` — Screen 6: Trust Score (`/trust-score`)
+- `presentation.html` — Self-contained 23-slide HTML presentation
+
+## Instructions for the AI Chatbot (IMPORTANT)
+- I'm a high school freshman editing this project in **Visual Studio Code (VS Code)** on my PC, and I am chatting with you in a web browser (you are not connected directly to my files).
+- Please keep explanations simple, clear, and encouraging.
+- **Step 1:** When I describe a change I want to make, if I haven't uploaded/pasted the file yet, tell me the **exact file path** from the list above that I should upload or paste into this chat.
+- **Step 2:** Once I upload or paste that file (or if you already have what you need), **ALWAYS give me the COMPLETE, FULL updated file from line 1 to the very end** — NEVER use placeholders like `// ... rest of code ...` — so I can simply click "Copy code", press `Ctrl + A` and `Ctrl + V` in VS Code, and save (`Ctrl + S`).
+- Remind me that once I press `Ctrl + S` in VS Code, my browser running `npm run dev` will update automatically!
+- Keep the dark navy/teal/cyan color scheme consistent.
+- Keep "Team Vanguard V" and "TrustShield" branding.
+- This is a demo prototype with mock data — don't add real backends or databases.

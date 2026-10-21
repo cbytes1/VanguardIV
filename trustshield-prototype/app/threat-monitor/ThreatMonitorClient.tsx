@@ -31,7 +31,7 @@ import { devices, liveThreats } from "@/data/mock";
 
 // -----------------------------------------------------------------------------
 // Tuning knobs for the live simulation. Kept at module scope so they are easy
-// for the Vanguard IV team to tweak.
+// for the Vanguard V team to tweak.
 // -----------------------------------------------------------------------------
 
 /** How often a new threat is appended to the live feed (ms). */

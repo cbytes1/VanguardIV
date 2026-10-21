@@ -1,11 +1,11 @@
-# 🛡️ Vanguard IV — TrustShield
+# 🛡️ Vanguard V — TrustShield
 
 **2026 SCTE-RMC High School Innovation Challenge**
 *Bridging the Trust Deficit: Designing Technologies That Restore Confidence in a Connected World*
 
 ---
 
-## 👋 Welcome, Vanguard IV!
+## 👋 Welcome, Vanguard V!
 
 This is your starting point for the Innovation Challenge. Inside this repo you'll find two things your team built:
 
@@ -64,42 +64,51 @@ A real interactive web app with 6 screens.
 3. Use **arrow keys** (← →) or **click** the left/right edges to move between slides
 4. That's it!
 
-To edit the presentation, just open `presentation.html` in any text editor (VS Code, Notepad, etc.) and change the text you see. It's all in one file.
+To edit the presentation, just open `presentation.html` in VS Code (or Notepad) and change the text you see. It's all in one file.
 
-### The Prototype App
+### The Prototype App (Using VS Code on Your PC)
 
-This requires a few things installed first. Follow these steps carefully:
+This requires a few free tools installed first. Follow these steps carefully:
 
-#### Step 1: Install Node.js
+#### Step 1: Install Visual Studio Code (VS Code)
+1. Go to [https://code.visualstudio.com](https://code.visualstudio.com)
+2. Download and install VS Code for Windows (use all default settings)
+
+#### Step 2: Install Node.js
 1. Go to [https://nodejs.org](https://nodejs.org)
 2. Download the **LTS** version (the big green button)
 3. Run the installer — just click Next through everything, use all the defaults
 4. When it's done, **restart your computer** (this makes sure the commands work)
 
-#### Step 2: Install Git (if you don't have it)
+#### Step 3: Install Git (if you don't have it)
 1. Go to [https://git-scm.com/downloads](https://git-scm.com/downloads)
 2. Download and install for your OS
 3. Use all the default settings
 
-#### Step 3: Get the Code
-Open a terminal (search for "Terminal" or "Command Prompt" or "PowerShell" on your computer) and type:
+#### Step 4: Download the Code & Open in VS Code
+1. Open **VS Code**
+2. Open the built-in Terminal inside VS Code by pressing **`Ctrl + ~`** (or from the top menu: **Terminal → New Terminal**)
+3. In the terminal at the bottom of VS Code, type:
 ```bash
 git clone https://github.com/cbytes1/VanguardIV.git
 cd VanguardIV/trustshield-prototype
 ```
+4. Then click **File → Open Folder...** in VS Code and select the `VanguardIV` folder you just downloaded so you can see all the files in the left sidebar!
 
-#### Step 4: Install Dependencies and Run
+#### Step 5: Install Dependencies and Run
+In the VS Code terminal (inside the `trustshield-prototype` folder), run:
 ```bash
 npm install
 npm run dev
 ```
+*(Note: If Windows says `permission denied 0.0.0.0:3000` or `EACCES`, port 3000 is reserved by Windows. Just run `npx next dev -p 4000` instead and open `http://localhost:4000`!)*
 
-#### Step 5: Open It
-Open your browser and go to: **http://localhost:3000**
+#### Step 6: Open It in Your Browser
+Open Chrome or Edge and go to: **http://localhost:3000** (or **http://localhost:4000** if you used port 4000).
 
-You should see the TrustShield landing page. Click "Start the tour" or use the sidebar to explore all 6 screens.
+You should see the TrustShield landing page. Click **"Start the tour"** or use the sidebar to explore all 6 screens.
 
-> **Tip:** Keep the terminal open while you're using the app. To stop it, press `Ctrl + C` in the terminal.
+> **⚡ Live Reloading (No Recompiling Needed!):** Keep the VS Code terminal running while you work. Every time you edit a file in VS Code and press **`Ctrl + S`** (Save), your browser tab updates **automatically on the fly** in about 1 second! To stop the server when you're done, click in the terminal and press `Ctrl + C`.
 
 ### The 6 Screens
 | Screen | URL | What It Shows |
@@ -119,7 +128,7 @@ You should see the TrustShield landing page. Click "Start the tour" or use the s
 ### Editing the Presentation
 - Open `presentation.html` in VS Code or any text editor
 - Search for the text you want to change and edit it directly
-- Save and refresh your browser to see changes
+- Save (`Ctrl + S`) and refresh your browser (`F5`) to see changes
 - Each slide is a `<section>` block — you can find them by searching for `SLIDE 1`, `SLIDE 2`, etc.
 
 ### Editing the Prototype
@@ -145,67 +154,81 @@ trustshield-prototype/
 
 **Easiest things to change first:**
 - **`data/mock.ts`** — Change the family name, add devices, change threat data, update the Trust Score
-- **`app/*/page.tsx`** — Change headings, descriptions, and labels on each screen
+- **`app/*/*Client.tsx`** — Change the interactive screens, headings, buttons, and layout
 - **`app/globals.css`** — Change colors, fonts, spacing
 - **`components/Sidebar.tsx`** — Change the sidebar navigation
 
-After making changes, save the file and your browser should automatically refresh (if you're running `npm run dev`).
+After making changes in VS Code, press **`Ctrl + S`** and your browser will automatically refresh (as long as `npm run dev` is running in the terminal).
 
 ---
 
-## 🤖 Using AI to Keep Building (Start Here!)
+## 🤖 How to Add & Edit Features Using Gemini Chat or ChatGPT (Start Here!)
 
-We included a file called **`AI-CONTEXT.md`** in this repo. This is your secret weapon. It contains everything an AI assistant needs to know about the TrustShield project — the concept, the tech stack, the file structure, the business case, and the judging criteria.
+You don't need to be an expert coder or have any special AI applications installed on your PC. You can make any change you want using **VS Code** on your computer and a standard **web browser chatbot** (**[Gemini](https://gemini.google.com)** or **[ChatGPT](https://chatgpt.com)**).
 
-### How to Use It
-1. Open `AI-CONTEXT.md` in this repo
-2. **Copy the entire contents**
-3. **Paste it into any AI tool** (Gemini, ChatGPT, Antigravity, Bolt, etc.) at the start of your conversation
-4. Then ask your question or describe what you want to change
-
-**Example:** paste the context, then say:
-> "I want to add a new threat type called 'AI Voice Cloning' to the dashboard's recent activity feed. Show me how."
-
-The AI will already know your project structure, which files to edit, and how to keep things consistent — because you gave it the context file.
-
-### If You're Using Kiro
-This project also has a `.kiro/steering/` file baked in. That means if you open this workspace in Kiro, it automatically knows everything about TrustShield without you pasting anything. Just start asking questions.
+We included a file called **`AI-CONTEXT.md`** in this repo. It is your secret weapon! It contains everything Gemini or ChatGPT needs to know about the TrustShield project — the concept, the tech stack, which file controls which screen, the business case, and instructions telling the chatbot to always give you complete, copy-paste-ready files.
 
 ---
 
-## 🛠️ Free Tools to Help You Build
+### The 4-Step Copy-Paste Workflow (VS Code + Web Chatbot)
 
-You don't need to be an expert coder to improve this project. These free AI tools can help you make changes, fix bugs, and add new features just by describing what you want in plain English.
+#### Step 1: Give the Chatbot Your Project Map
+1. In VS Code, click on **`AI-CONTEXT.md`** in the left sidebar.
+2. Press **`Ctrl + A`** (Select All) and **`Ctrl + C`** (Copy).
+3. Open **[gemini.google.com](https://gemini.google.com)** or **[chatgpt.com](https://chatgpt.com)** in your web browser, paste the contents into a new chat, and press Enter.
+   - *Now the chatbot knows every screen, color, and file name in your project!*
 
-### AI Coding Assistants (Free)
+#### Step 2: Tell the Chatbot What You Want to Add (in Plain English)
+Describe what you want to add or change, and ask which file it needs:
+> *"I want to add a new threat type called 'AI Voice Cloning' to the dashboard's recent activity feed. Which file should I paste for you to edit?"*
 
-| Tool | What It Does | How to Get It |
-|---|---|---|
-| **[Google Antigravity](https://antigravity.dev)** | Google's AI app builder — describe what you want and it builds it. Great for iterating on the prototype. Import the project and ask it to make changes. | Free with a Google account |
-| **[Gemini](https://gemini.google.com)** | Google's AI chat — paste code, ask questions, get help debugging. Students get a free enhanced plan. | Free with a Google account |
-| **[Gemini Code Assist](https://codeassist.google)** | AI coding help right inside VS Code. Autocompletes code, answers questions about your codebase, and generates code from descriptions. | Free VS Code extension |
-| **[ChatGPT](https://chat.openai.com)** | OpenAI's AI chat — great for explaining code, brainstorming, and getting help with specific problems | Free tier available |
-| **[Bolt.new](https://bolt.new)** | Describe an app in words and it builds it in your browser. Good for prototyping new screens or features quickly. | Free tier: 1M tokens/month |
-| **[Lovable](https://lovable.dev)** | Similar to Bolt — describe what you want and it generates a working app. Has a student discount (50% off Pro). | Free tier: 30 builds/month. [Student discount](https://lovable.dev/students) |
-| **[Replit](https://replit.com)** | Code editor that runs in your browser — no installs needed. Has AI built in to help you code. Good for quick experiments. | Free Starter plan |
+Or:
+> *"I want to add a button on the Family Protection screen that lets parents pause Wi-Fi at bedtime. Which file do you need me to send you?"*
 
-### Code Editors (Free)
+The chatbot will look at the project map from `AI-CONTEXT.md` and tell you the exact file to open in VS Code.
 
-| Tool | Why Use It |
+#### Step 3: Paste That File into the Chat & Ask for the Complete File Back
+1. Click that file in VS Code, press **`Ctrl + A`** then **`Ctrl + C`**, and paste it into Gemini or ChatGPT (or drag-and-drop the file into the chat box).
+2. Say:
+   > *"Here is my current file. Please add that feature and give me back the **entire updated file from top to bottom** so I can copy and paste the whole thing."*
+
+*(💡 **Important:** Always ask for the **entire updated file** so you never have to guess which line number a snippet goes on!)*
+
+#### Step 4: Copy, Paste into VS Code, and Save (`Ctrl + S`)
+1. Click the **Copy code** button in the top-right corner of Gemini's or ChatGPT's code block.
+2. Click back into that same file in **VS Code**.
+3. Press **`Ctrl + A`** (Select All) → **`Ctrl + V`** (Paste) → **`Ctrl + S`** (Save).
+4. Look at your browser tab — **your running demo updates automatically in ~1 second!**
+
+---
+
+### 🗺️ Quick Cheat Sheet: Which File Do I Send to Gemini / ChatGPT?
+
+| What you want to change | File to open in VS Code & paste into the chat |
 |---|---|
-| **[Visual Studio Code (VS Code)](https://code.visualstudio.com)** | The most popular code editor. Free. Install the Gemini Code Assist extension for AI help built right in. |
-| **[Replit](https://replit.com)** | Runs in your browser — nothing to install. Good if you can't install software on your school computer. |
+| **Family members, devices, threats, recent activity, scores, fake numbers** | `trustshield-prototype/data/mock.ts` |
+| **Left sidebar menu or Team Vanguard V name** | `trustshield-prototype/components/Sidebar.tsx` |
+| **Welcome / Landing page (`/`)** | `trustshield-prototype/app/page.tsx` |
+| **Screen 1: Dashboard (`/dashboard`)** | `trustshield-prototype/app/dashboard/DashboardClient.tsx` |
+| **Screen 2: Threat Monitor (`/threat-monitor`)** | `trustshield-prototype/app/threat-monitor/ThreatMonitorClient.tsx` |
+| **Screen 3: Deepfake Checker (`/deepfake-checker`)** | `trustshield-prototype/app/deepfake-checker/DeepfakeCheckerClient.tsx` |
+| **Screen 4: Family Protection (`/family-protection`)** | `trustshield-prototype/app/family-protection/FamilyProtectionClient.tsx` |
+| **Screen 5: Privacy Center / "Foggy Glass" (`/privacy-center`)** | `trustshield-prototype/app/privacy-center/PrivacyCenterClient.tsx` |
+| **Screen 6: Trust Score (`/trust-score`)** | `trustshield-prototype/app/trust-score/TrustScoreClient.tsx` |
+| **The 23-Slide Presentation** | `presentation.html` |
 
-### Recommended Workflow for Beginners
-1. **Open the project in VS Code** with Gemini Code Assist installed
-2. **Find the file you want to change** (use the folder structure above)
-3. **Ask the AI for help** — highlight code, right-click, and ask Gemini to explain it or change it
-4. **Or use Antigravity/Bolt.new** — paste your project files or import from GitHub and describe the changes you want in plain English
-5. **Test your changes** — save, check the browser, fix any errors
-6. **Commit and push** — when you're happy with changes, push them to GitHub so the whole team can see
+---
 
-### How to Push Your Changes to GitHub
-After you make edits on your computer:
+### 🛠️ Tools You'll Use (All Free)
+
+| Tool | What It's For | Link |
+|---|---|---|
+| **Visual Studio Code (VS Code)** | Editing your project files & running the terminal on your PC | [code.visualstudio.com](https://code.visualstudio.com) |
+| **Google Gemini (Web Browser Chat)** | Paste `AI-CONTEXT.md` + your file, describe changes in plain English, copy updated code back | [gemini.google.com](https://gemini.google.com) |
+| **ChatGPT (Web Browser Chat)** | Great alternative web chatbot for explaining code, brainstorming, and generating full file updates | [chatgpt.com](https://chatgpt.com) |
+
+### How to Save & Push Your Changes to GitHub
+When you're happy with your changes and want the rest of the team to see them, open the VS Code terminal (`Ctrl + ~`) and run:
 ```bash
 git add -A
 git commit -m "Describe what you changed here"
@@ -269,12 +292,12 @@ The challenge asks every team to submit and present a recommendation with these 
 
 ## ❓ Need Help?
 
-- **Code not running?** Make sure Node.js is installed and you ran `npm install` first
-- **Browser shows an error?** Check the terminal where you ran `npm run dev` for error messages
+- **Code not running?** Make sure Node.js is installed and you ran `npm install` inside the `trustshield-prototype` folder first.
+- **Port 3000 error on Windows (`EACCES: permission denied`)?** Run `npx next dev -p 4000` instead and open `http://localhost:4000`.
+- **Browser shows an error after pasting code?** Copy the error message from your browser or VS Code terminal and paste it into Gemini or ChatGPT — ask it to fix the file and give you back the complete file.
 - **App loads blank or with no styling?** The build cache may be corrupted. Stop the server (`Ctrl + C`), delete the `.next` folder inside `trustshield-prototype/`, then run `npm run dev` again.
-- **Want to change something but don't know how?** Copy the error or describe what you want into Gemini, ChatGPT, or any AI tool — they're great at explaining code
-- **Broke something?** Run `git checkout .` to undo all changes and get back to the original code
+- **Broke something and want to start fresh?** Run `git checkout .` in the VS Code terminal to undo all unsaved changes and get back to the working code.
 
 ---
 
-*Built with ❤️ by Team Vanguard IV for the 2026 SCTE-RMC High School Innovation Challenge*
+*Built with ❤️ by Team Vanguard V for the 2026 SCTE-RMC High School Innovation Challenge*

@@ -43,7 +43,7 @@ export default function Sidebar() {
             TrustShield
           </span>
           <span className="text-[11px] font-medium uppercase tracking-wide text-teal/80">
-            Team Vanguard IV
+            Team Vanguard V
           </span>
         </span>
       </Link>
@@ -74,7 +74,7 @@ export default function Sidebar() {
 
       <div className="mt-auto hidden px-5 py-4 text-xs text-white/40 md:block">
         <p>Demo prototype</p>
-        <p>Team Vanguard IV · 2026</p>
+        <p>Team Vanguard V · 2026</p>
       </div>
     </aside>
   );

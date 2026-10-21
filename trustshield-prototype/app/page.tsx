@@ -100,7 +100,7 @@ export default function Home() {
       </section>
 
       <p className="mt-14 text-xs text-white/40">
-        Demo prototype · Team Vanguard IV · 2026 High School Innovation Challenge
+        Demo prototype · Team Vanguard V · 2026 High School Innovation Challenge
       </p>
     </main>
   );

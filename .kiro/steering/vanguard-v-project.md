@@ -1,12 +1,12 @@
-# Vanguard IV — TrustShield Project Context
+# Vanguard V — TrustShield Project Context
 
 ## What This Project Is
-This workspace contains deliverables for **Team Vanguard IV** competing in the **2026 SCTE-RMC High School Innovation Challenge**. The challenge theme is "Bridging the Trust Deficit: Designing Technologies That Restore Confidence in a Connected World."
+This workspace contains deliverables for **Team Vanguard V** competing in the **2026 SCTE-RMC High School Innovation Challenge**. The challenge theme is "Bridging the Trust Deficit: Designing Technologies That Restore Confidence in a Connected World."
 
 The team's concept is **TrustShield** — an AI-powered scam, fraud, and digital-trust guardian for families, delivered through a broadband provider's existing infrastructure (Wi-Fi gateway + app + web dashboard).
 
 ## Key Files
-- `vanguard-iv-presentation.html` — Self-contained 23-slide HTML presentation (all 10 deliverables)
+- `vanguard-v-presentation.html` — Self-contained 23-slide HTML presentation (all 10 deliverables)
 - `trustshield-prototype/` — Next.js 15 + React 19 + TypeScript + Tailwind CSS web app prototype
 - GitHub repo: https://github.com/cbytes1/VanguardIV/
 
@@ -89,6 +89,6 @@ Answer: The "foggy glass" model was designed from the start for this. Patterns n
 - All data in the prototype is **mock/simulated** — this is a demo, not a real security product
 - When making code changes, run `npm run build` to verify no errors before committing
 - The presentation is a single self-contained HTML file — no external dependencies
-- Preserve the "Team Vanguard IV" branding throughout
+- Preserve the "Team Vanguard V" branding throughout
 - Keep the dark navy/teal color scheme consistent
 - The challenge document is at: `2026 SCTE-RMC High School Innovation Challenge.pdf`

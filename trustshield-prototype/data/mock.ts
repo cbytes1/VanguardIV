@@ -481,6 +481,14 @@ export const threats: Threat[] = [
 
 export const recentActivity: ActivityEvent[] = [
   {
+    id: "act-00",
+    severityDot: "red",
+    title: "AI Voice Cloning attempt blocked",
+    source: "+1 (555) 019-2284 · Synthetic audio detected",
+    timestamp: "2026-01-14T10:09:30Z",
+    relativeLabel: "Just now",
+  },
+  {
     id: "act-01",
     severityDot: "red",
     title: "Phishing email blocked",

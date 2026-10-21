@@ -1,7 +1,7 @@
 # TrustShield Prototype
 
 A clickable demo prototype for the **2026 High School Innovation Challenge**,
-built by **Team Vanguard IV**.
+built by **Team Vanguard V**.
 
 ## Overview
 
@@ -16,7 +16,7 @@ protection, and privacy controls into one place and sums it all up as a single
 This repo is a front-end prototype wired to **mock data**. It walks through one
 fictional household — the **Johnson family** of Denver, CO (David, Sarah, teen
 Alex, and 10-year-old Emma) — so judges can see the whole experience as a story.
-It's meant as a starting point the Vanguard IV team can extend. The code is
+It's meant as a starting point the Vanguard V team can extend. The code is
 commented throughout so you can read it, understand it, and change it.
 
 Built with [Next.js](https://nextjs.org) 15 (App Router), React 19,
@@ -143,7 +143,7 @@ the same every time.
 
 ## Extending the prototype
 
-The code is organized and commented so the Vanguard IV team can modify it:
+The code is organized and commented so the Vanguard V team can modify it:
 change the household in `data/mock.ts`, add a screen by creating a new folder
 under `app/`, or restyle using the palette tokens in `tailwind.config.ts`. Run
 `npm run build` after changes to catch TypeScript or lint errors before a demo.

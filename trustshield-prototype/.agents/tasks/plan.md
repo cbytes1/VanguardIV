@@ -55,7 +55,7 @@ All paths below are absolute under the project root
       Verify: `npm run build` succeeds; counters animate on screens that use them (checked in later steps).
 
 - [ ] 5. Confirm sidebar branding and active highlighting meet spec.
-      Update `components/Sidebar.tsx` header to show both "Vanguard IV" and "TrustShield" branding, keep active-page highlight (already implemented via `usePathname`), and ensure order matches the six screens. Add smooth page-transition styling (e.g. a fade-in wrapper in `AppShell`).
+      Update `components/Sidebar.tsx` header to show both "Vanguard V" and "TrustShield" branding, keep active-page highlight (already implemented via `usePathname`), and ensure order matches the six screens. Add smooth page-transition styling (e.g. a fade-in wrapper in `AppShell`).
       Files: `components/Sidebar.tsx`, `components/AppShell.tsx`
       Verify: `npm run dev`; sidebar shows both brands, highlights the current route, transitions are smooth.
 
